@@ -1,25 +1,92 @@
-import logo from './logo.svg';
-import './App.css';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useRef } from "react";
+
+const exampleItems = [
+  {
+    title: "Section 1",
+    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  },
+  {
+    title: "Section 2",
+    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  },
+  {
+    title: "Section 3",
+    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  },
+];
 
 function App() {
+  const refs = useRef([]);
+
+  // create intersaction observer
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+          entry.target.classList.remove("hidden");
+        } else {
+          entry.target.classList.remove("show");
+          entry.target.classList.add("hidden");
+        }
+      });
+    },
+    {
+      rootMargin: "-100px 0px",
+    }
+  );
+
+  useEffect(() => {
+    refs.current = refs.current.slice(0, exampleItems.length);
+  }, [exampleItems]);
+
+  useEffect(() => {
+    // observe each ref
+    refs.current?.forEach((ref) => {
+      if (ref) {
+        observer.observe(ref);
+      }
+    });
+
+    return () => {
+      // unobserve each ref
+      refs.current?.forEach((ref) => {
+        if (ref) {
+          observer.unobserve(ref);
+        }
+      });
+    };
+  }, [refs]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div className="app">
+      {exampleItems.map((item, index) => (
+        <FullHeightSection
+          ref={(element) => (refs.current[index] = element)}
+          key={index}
         >
-          Learn React
-        </a>
-      </header>
+          <h1>{item.title}</h1>
+          <p>{item.content}</p>
+        </FullHeightSection>
+      ))}
     </div>
   );
 }
+
+const FullHeightSection = React.forwardRef(function (
+  props: {
+    children: React.ReactNode,
+  },
+  ref: React.Ref<HTMLDivElement>
+) {
+  const { children } = props;
+
+  return (
+    <section ref={ref} className="full-height-section">
+      {children}
+    </section>
+  );
+});
 
 export default App;
