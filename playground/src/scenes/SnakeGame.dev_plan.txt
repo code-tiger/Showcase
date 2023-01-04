@@ -1,0 +1,30 @@
+Coding Challenge #1
+
+Please recreate the classic video game "Snake". Here are the steps
+
+1. Implement the game board: Create a data structure to represent the game board, which will be a grid of squares that the snake can move around on. You might want to use a two-dimensional array to store the state of each square on the board (empty, snake, food, etc.).
+
+2. Implement the snake: Create a data structure to represent the snake, which will be a sequence of squares that move around the board. You will need to decide on a way to store the snake's position and direction, and to update these values as the snake moves around the board.
+
+3. Implement the food: Create a data structure to represent the food, which will be a single square on the board that the snake can eat. You will need to decide on a way to generate random locations for the food, and to update the board when the snake eats the food.
+
+4. Implement the game mechanics: Write the code that controls the gameplay mechanics, such as the movement of the snake, the generation of food, and the scoring system. You may want to use an object-oriented programming approach to organize your code.
+
+5. Render the game: Use canvas API or library such as pixi.js to create the game graphics and animation, and to display the game on the screen. This will involve creating sprite sheets or graphics for the game elements (such as the snake, food, and background), and writing code to update the game state and render it on the screen.
+
+6. Test and debug your game: Test your game thoroughly to ensure that it is functioning correctly, and fix any bugs that you encounter.
+------------------------------------------------------------
+
+Game Rules:
+
+In a "Snake" game, the snake typically moves by sliding across the game board in a particular direction (usually up, down, left, or right). The snake's movement is typically controlled by the player, who can change the direction of the snake's movement by pressing arrow keys or other buttons on the keyboard or game controller.
+
+Here are some specific rules that you might consider implementing for the snake's movement in your "Snake" game:
+
+- The snake moves in a single direction until the player changes its direction.
+- The snake cannot move in the opposite direction of its current movement. For example, if - the snake is moving to the right, it cannot immediately turn and start moving to the left.
+- The snake can only change direction when it reaches a grid square on the game board.
+- When the snake eats a food item, it grows in length and its speed increases.
+- The game ends when the snake hits the edge of the game board or its own body.
+
+These are just a few examples of rules that you might consider implementing for the snake's movement in your game. You are free to experiment with different gameplay mechanics and come up with your own rules for the snake's movement. 
