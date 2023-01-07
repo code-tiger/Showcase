@@ -35,6 +35,7 @@ export default function AnimatedCat() {
     <div
       ref={ref}
       id="canvas"
+      className="horizontal-movement"
       style={{
         width: "100vw",
         height: "100vh",
@@ -46,17 +47,10 @@ export default function AnimatedCat() {
 async function loadTexture(app: PIXI.Application) {
   const texture = Texture.from(catImage);
 
-  console.log("🚀 ~ file: AnimatedCat.js:58 ~ loadTexture ~ texture", texture);
-
   const spritesheet = new Spritesheet(texture, data);
 
   // Generate all the Textures asynchronously
   await spritesheet.parse();
-
-  console.log(
-    "🚀 ~ file: AnimatedCat.js:52 ~ loadTexture ~ spritesheet",
-    spritesheet
-  );
 
   const textures = [];
 
