@@ -9,6 +9,8 @@ export default function AnimatedCat() {
   const app = usePixiApp();
 
   useEffect(() => {
+    let intervalId;
+
     if (ref?.current && app?.view) {
       // Add app to DOM
       ref.current?.appendChild(app.view);
@@ -16,7 +18,19 @@ export default function AnimatedCat() {
       // Start the PixiJS app
       app.start();
 
-      setCatAnimation(app);
+      setCatAnimation(app).then(({ catAnimatedSprite, catAnimation }) => {
+        intervalId = setInterval(() => {
+          // pick random animation
+          catAnimatedSprite.textures =
+            catAnimation[
+              Object.keys(catAnimation)[
+                Math.floor(Math.random() * Object.keys(catAnimation).length)
+              ]
+            ];
+
+          catAnimatedSprite.play();
+        }, 2000);
+      });
     }
 
     return () => {
@@ -27,6 +41,10 @@ export default function AnimatedCat() {
 
         // Stop the PixiJS app
         app.stop();
+      }
+
+      if (intervalId) {
+        clearInterval(intervalId);
       }
     };
   }, [ref, app]);
@@ -112,10 +130,4 @@ function loadAnimationTextures({ name, spriteSheet }) {
   }
 
   return textures;
-}
-
-function loop({ catAnimatedSprite, textures }) {
-  catAnimatedSprite.textures = textures;
-
-  catAnimatedSprite.play();
 }
