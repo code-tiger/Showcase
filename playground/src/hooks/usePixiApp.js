@@ -11,7 +11,6 @@ export default function usePixiApp(): Application | null {
         new Application({
           width: WIDTH,
           height: HEIGHT,
-          // transparent: true,
           backgroundAlpha: 0,
         })
       );

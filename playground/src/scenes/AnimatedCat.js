@@ -1,8 +1,8 @@
 import { AnimatedSprite, Spritesheet, Texture } from "pixi.js";
 import { useEffect, useRef } from "react";
 import usePixiApp from "../hooks/usePixiApp";
-import data from "../assets/cat_idle_1.json";
-import catImage from "../assets/cat_idle_1.png";
+import catAnimationSheet from "../assets/cat_animations.png";
+import catAnimationSheetData from "../assets/cat_animations.json";
 
 export default function AnimatedCat() {
   const ref = useRef(null);
@@ -16,7 +16,7 @@ export default function AnimatedCat() {
       // Start the PixiJS app
       app.start();
 
-      loadTexture(app);
+      setCatAnimation(app);
     }
 
     return () => {
@@ -44,38 +44,78 @@ export default function AnimatedCat() {
   );
 }
 
-async function loadTexture(app: PIXI.Application) {
-  const texture = Texture.from(catImage);
+async function setCatAnimation(app: PIXI.Application) {
+  const catAnimation = await loadCatAnimations();
 
-  const spritesheet = new Spritesheet(texture, data);
-
-  // Generate all the Textures asynchronously
-  await spritesheet.parse();
-
-  const textures = [];
-
-  for (const key in spritesheet.textures) {
-    textures.push(spritesheet.textures[key]);
-  }
-
-  const animatedSprite = new AnimatedSprite(textures);
+  const catAnimatedSprite = new AnimatedSprite(catAnimation.lick);
 
   // set animatedSprite center
-  animatedSprite.anchor.set(0.5);
+  catAnimatedSprite.anchor.set(0.5);
 
   // set animatedSprite position
-  animatedSprite.x = app.screen.width / 2;
-  animatedSprite.y = app.screen.height / 2;
+  catAnimatedSprite.x = app.screen.width / 2;
+  catAnimatedSprite.y = app.screen.height / 2;
 
   // scale the sprite up to 2x its size
-  animatedSprite.scale.set(2);
+  catAnimatedSprite.scale.set(2);
 
   // // set the animation speed
-  animatedSprite.animationSpeed = 0.1666;
-
-  // // play the animation on a loop
-  animatedSprite.play();
+  catAnimatedSprite.animationSpeed = 0.1666;
 
   // // add it to the stage to render
-  app.stage?.addChild(animatedSprite);
+  app.stage?.addChild(catAnimatedSprite);
+
+  // // play the animation on a loop
+  catAnimatedSprite.play();
+
+  return {
+    catAnimatedSprite,
+    catAnimation,
+  };
+}
+
+async function loadCatAnimations(): Promise<{
+  idle: Texture[],
+  lick: Texture[],
+}> {
+  const AnimatedCat = {};
+
+  const spriteSheet = await loadSpreadSheet();
+
+  AnimatedCat.idle = loadAnimationTextures({ name: "idle", spriteSheet });
+
+  AnimatedCat.lick = loadAnimationTextures({ name: "lick", spriteSheet });
+
+  return AnimatedCat;
+}
+
+async function loadSpreadSheet() {
+  const texture = Texture.from(catAnimationSheet);
+
+  const spriteSheet = new Spritesheet(texture, catAnimationSheetData);
+
+  // Generate all the Textures asynchronously
+  await spriteSheet.parse();
+
+  return spriteSheet;
+}
+
+function loadAnimationTextures({ name, spriteSheet }) {
+  const textures = [];
+
+  const targetKeys = Object.keys(spriteSheet.textures).filter((key) => {
+    return key.includes(name);
+  });
+
+  for (const key of targetKeys) {
+    textures.push(spriteSheet.textures[key]);
+  }
+
+  return textures;
+}
+
+function loop({ catAnimatedSprite, textures }) {
+  catAnimatedSprite.textures = textures;
+
+  catAnimatedSprite.play();
 }
