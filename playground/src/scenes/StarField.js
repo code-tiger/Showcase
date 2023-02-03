@@ -2,11 +2,16 @@
 import { useEffect, useRef } from "react";
 import { WIDTH, HEIGHT } from "../constant";
 import Star from "../graphics/Star";
-import usePixiApp from "../hooks/usePixiApp";
+import { Application } from "pixi.js";
+
+const app = new Application({
+  width: WIDTH,
+  height: HEIGHT,
+  backgroundColor: 0x000000,
+});
 
 export default function StarField() {
   const ref = useRef(null);
-  const app = usePixiApp();
   const stars = [];
 
   useEffect(() => {
@@ -23,7 +28,7 @@ export default function StarField() {
       }
 
       // Animate stars
-      app.ticker.add((delta) => {
+      app.ticker.add(() => {
         stars.forEach((star) => {
           star.update();
         });
