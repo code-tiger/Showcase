@@ -13,8 +13,6 @@ export default function usePixiApp(
 ): Application | null {
   const [app, setApp] = useState(null);
 
-  console.log("🚀 ~ file: usePixiApp.js:15 ~ app", app);
-
   useEffect(() => {
     if (!app) {
       setApp(application);
